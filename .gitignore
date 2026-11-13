@@ -1,0 +1,6 @@
+# Arquivos gerados pelo ModelSim
+work/
+transcript
+*.wlf
+modelsim.ini
+*.vstf
