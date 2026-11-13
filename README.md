@@ -61,12 +61,7 @@ As duas têm **o mesmo comportamento ciclo a ciclo**, e o test bench roda as dua
 | S12 | compara com `key`: achou, vai para a esquerda ou para a direita |
 | S13 | `done ← 1` e volta para S0 |
 
-<details>
-<summary><b>📈 Ver o grafo da FSMD</b></summary>
-
-![Grafo FSMD](docs/fsmd.png)
-
-</details>
+📈 Grafo completo da FSMD: [`FSMD_ExponentialSearch.pdf`](FSMD_ExponentialSearch.pdf)
 
 ---
 
@@ -87,7 +82,6 @@ As duas têm **o mesmo comportamento ciclo a ciclo**, e o test bench roda as dua
 | `image.txt` | Conteúdo da memória (um valor hexa por linha) |
 | `compile.tcl`, `wave.do` | Scripts do ModelSim |
 | `FSMD_ExponentialSearch.pdf` | Grafo da FSMD para imprimir |
-| `estudo/ROTEIRO_ESTUDO.md` | Roteiro de estudo: conceito → slide da aula → onde aparece no trabalho |
 
 ---
 
