@@ -15,28 +15,23 @@ end ExponentialSearch_tb;
 -- Instancias e estimulos
 architecture behavioral of ExponentialSearch_tb is
 
-    constant WIDTH          : integer := 8;
-
     signal clk              : std_logic := '0';
     signal rst              : std_logic;
     signal data_av          : std_logic;
-    signal data             : std_logic_vector(WIDTH-1 downto 0);
+    signal data             : std_logic_vector(7 downto 0);
 
-    signal pos1, pos2       : std_logic_vector(WIDTH-1 downto 0);
+    signal pos1, pos2       : std_logic_vector(7 downto 0);
     signal done1, done2     : std_logic;
 
     signal wr1, wr2         : std_logic;
     signal ce1, ce2         : std_logic;
-    signal address1, address2       : std_logic_vector(WIDTH-1 downto 0);
-    signal es1_data_in, es2_data_in : std_logic_vector(WIDTH-1 downto 0);
+    signal address1, address2       : std_logic_vector(7 downto 0);
+    signal es1_data_in, es2_data_in : std_logic_vector(7 downto 0);
 
 begin
 
     -- Unidade em teste
     PROCESSOR_STR: entity work.ExponentialSearch(structural)
-        generic map (
-            WIDTH       => WIDTH
-        )
         port map (
             clk         => clk,
             rst         => rst,
@@ -54,8 +49,8 @@ begin
 
     RAM1: entity work.Memory
         generic map (
-            DATA_WIDTH      => WIDTH,
-            ADDR_WIDTH      => WIDTH,
+            DATA_WIDTH      => 8,
+            ADDR_WIDTH      => 8,
             imageFileName   => "image.txt"
         )
         port map (
@@ -69,9 +64,6 @@ begin
 
     -- Unidade em teste
     PROCESSOR_BEH: entity work.ExponentialSearch(behavioral)
-        generic map (
-            WIDTH       => WIDTH
-        )
         port map (
             clk         => clk,
             rst         => rst,
@@ -89,8 +81,8 @@ begin
 
     RAM2: entity work.Memory
         generic map (
-            DATA_WIDTH      => WIDTH,
-            ADDR_WIDTH      => WIDTH,
+            DATA_WIDTH      => 8,
+            ADDR_WIDTH      => 8,
             imageFileName   => "image.txt"
         )
         port map (
@@ -118,10 +110,10 @@ begin
         -- Busca 1: key = 20, pos = 6
         wait until rising_edge(clk);
             data_av <= '1';
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,WIDTH));    -- base
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,8));    -- base
 
         wait until rising_edge(clk);
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,WIDTH));    -- len
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,8));    -- len
 
         wait until rising_edge(clk);
             data <= x"14";                                     -- key
@@ -136,10 +128,10 @@ begin
         -- Busca 2: key = -10, pos = 0 (primeiro)
         wait until rising_edge(clk);
             data_av <= '1';
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,WIDTH));    -- base
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,8));    -- base
 
         wait until rising_edge(clk);
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,WIDTH));    -- len
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,8));    -- len
 
         wait until rising_edge(clk);
             data <= x"F6";                                     -- key
@@ -154,10 +146,10 @@ begin
         -- Busca 3: key = 50, pos = 9 (ultimo)
         wait until rising_edge(clk);
             data_av <= '1';
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,WIDTH));    -- base
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,8));    -- base
 
         wait until rising_edge(clk);
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,WIDTH));    -- len
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,8));    -- len
 
         wait until rising_edge(clk);
             data <= x"32";                                     -- key
@@ -172,10 +164,10 @@ begin
         -- Busca 4: key = 4, pos = -1 (nao encontrado)
         wait until rising_edge(clk);
             data_av <= '1';
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,WIDTH));    -- base
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,8));    -- base
 
         wait until rising_edge(clk);
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,WIDTH));    -- len
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,8));    -- len
 
         wait until rising_edge(clk);
             data <= x"04";                                     -- key
@@ -190,10 +182,10 @@ begin
         -- Busca 5: key = -20, pos = -1 (menor que todos, mid = 0)
         wait until rising_edge(clk);
             data_av <= '1';
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,WIDTH));    -- base
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,8));    -- base
 
         wait until rising_edge(clk);
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,WIDTH));    -- len
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,8));    -- len
 
         wait until rising_edge(clk);
             data <= x"EC";                                     -- key
@@ -208,10 +200,10 @@ begin
         -- Busca 6: key = 60, pos = -1 (maior que todos)
         wait until rising_edge(clk);
             data_av <= '1';
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,WIDTH));    -- base
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,8));    -- base
 
         wait until rising_edge(clk);
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,WIDTH));    -- len
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,8));    -- len
 
         wait until rising_edge(clk);
             data <= x"3C";                                     -- key
@@ -226,10 +218,10 @@ begin
         -- Busca 7: len = 0, pos = -1
         wait until rising_edge(clk);
             data_av <= '1';
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,WIDTH));    -- base
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,8));    -- base
 
         wait until rising_edge(clk);
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,WIDTH));    -- len
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0,8));    -- len
 
         wait until rising_edge(clk);
             data <= x"14";                                     -- key
@@ -244,10 +236,10 @@ begin
         -- Busca 8: base = 10, len = 5, key = 15, pos = 2
         wait until rising_edge(clk);
             data_av <= '1';
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,WIDTH));    -- base
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(10,8));    -- base
 
         wait until rising_edge(clk);
-            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(5,WIDTH));    -- len
+            data <= STD_LOGIC_VECTOR(TO_UNSIGNED(5,8));    -- len
 
         wait until rising_edge(clk);
             data <= x"0F";                                     -- key

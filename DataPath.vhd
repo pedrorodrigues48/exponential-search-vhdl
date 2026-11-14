@@ -9,41 +9,38 @@ use IEEE.numeric_std.all;
 use work.ExponentialSearch_pkg.all;
 
 entity DataPath is
-    generic (
-        WIDTH       : integer := 8
-    );
     port (
         clk         : in std_logic;
         rst         : in std_logic;
-        data        : in std_logic_vector (WIDTH - 1 downto 0);
-        pos         : out std_logic_vector (WIDTH - 1 downto 0);
+        data        : in std_logic_vector (7 downto 0);
+        pos         : out std_logic_vector (7 downto 0);
 
         -- Sinais do ControlPath
         sts         : out Status;
         cmd         : in Command;
 
         -- Memoria
-        address     : out std_logic_vector (WIDTH - 1 downto 0);
-        data_in     : in std_logic_vector (WIDTH - 1 downto 0)
+        address     : out std_logic_vector (7 downto 0);
+        data_in     : in std_logic_vector (7 downto 0)
     );
 end DataPath;
 
 
 architecture structural of DataPath is
 
-    signal base, len, key, i, left, right, mid, memData, pos_q : std_logic_vector(WIDTH - 1 downto 0);
+    signal base, len, key, i, left, right, mid, memData, pos_q : std_logic_vector(7 downto 0);
 
-    signal inI, inLeft, inRight, inMid, inPos : std_logic_vector(WIDTH - 1 downto 0);
+    signal inI, inLeft, inRight, inMid, inPos : std_logic_vector(7 downto 0);
 
-    signal idx, adder1A, adder1B, adder1Out : std_logic_vector(WIDTH - 1 downto 0);
+    signal idx, adder1A, adder1B, adder1Out : std_logic_vector(7 downto 0);
 
-    signal cmpX, cmpY, notCmpY, adder2Out : std_logic_vector(WIDTH - 1 downto 0);
+    signal cmpX, cmpY, notCmpY, adder2Out : std_logic_vector(7 downto 0);
 
     signal carryOut1, carryOut2 : std_logic;
 
-    constant ONE        : std_logic_vector(WIDTH - 1 downto 0) := STD_LOGIC_VECTOR(TO_UNSIGNED(1, WIDTH));
-    constant NOT_ONE    : std_logic_vector(WIDTH - 1 downto 0) := not ONE;    -- 0xFE
-    constant MINUS_ONE  : std_logic_vector(WIDTH - 1 downto 0) := (others=>'1');    -- -1
+    constant ONE        : std_logic_vector(7 downto 0) := x"01";
+    constant NOT_ONE    : std_logic_vector(7 downto 0) := not ONE;    -- 0xFE
+    constant MINUS_ONE  : std_logic_vector(7 downto 0) := (others=>'1');    -- -1
 
 begin
 
@@ -51,7 +48,7 @@ begin
 
     REG_BASE: entity work.RegisterNbits
         generic map (
-            WIDTH   => WIDTH
+            WIDTH   => 8
         )
         port map (
             clock   => clk,
@@ -63,7 +60,7 @@ begin
 
     REG_LEN: entity work.RegisterNbits
         generic map (
-            WIDTH   => WIDTH
+            WIDTH   => 8
         )
         port map (
             clock   => clk,
@@ -75,7 +72,7 @@ begin
 
     REG_KEY: entity work.RegisterNbits
         generic map (
-            WIDTH   => WIDTH
+            WIDTH   => 8
         )
         port map (
             clock   => clk,
@@ -87,7 +84,7 @@ begin
 
     REG_I: entity work.RegisterNbits
         generic map (
-            WIDTH   => WIDTH
+            WIDTH   => 8
         )
         port map (
             clock   => clk,
@@ -99,7 +96,7 @@ begin
 
     REG_LEFT: entity work.RegisterNbits
         generic map (
-            WIDTH   => WIDTH
+            WIDTH   => 8
         )
         port map (
             clock   => clk,
@@ -111,7 +108,7 @@ begin
 
     REG_RIGHT: entity work.RegisterNbits
         generic map (
-            WIDTH   => WIDTH
+            WIDTH   => 8
         )
         port map (
             clock   => clk,
@@ -123,7 +120,7 @@ begin
 
     REG_MID: entity work.RegisterNbits
         generic map (
-            WIDTH   => WIDTH
+            WIDTH   => 8
         )
         port map (
             clock   => clk,
@@ -135,7 +132,7 @@ begin
 
     REG_MEMDATA: entity work.RegisterNbits
         generic map (
-            WIDTH   => WIDTH
+            WIDTH   => 8
         )
         port map (
             clock   => clk,
@@ -147,7 +144,7 @@ begin
 
     REG_POS: entity work.RegisterNbits
         generic map (
-            WIDTH   => WIDTH
+            WIDTH   => 8
         )
         port map (
             clock   => clk,
@@ -162,17 +159,17 @@ begin
 
     -- i * 2
     inI     <= ONE when cmd.selI = '0' else
-               i(WIDTH - 2 downto 0) & '0';
+               i(6 downto 0) & '0';
 
     -- i / 2
-    inLeft  <= '0' & i(WIDTH - 1 downto 1) when cmd.selLeft = '0' else
+    inLeft  <= '0' & i(7 downto 1) when cmd.selLeft = '0' else
                adder1Out;
 
     inRight <= i when cmd.selRight = '0' else
                adder1Out;
 
     -- (left + right) / 2
-    inMid   <= '0' & adder1Out(WIDTH - 1 downto 1);
+    inMid   <= '0' & adder1Out(7 downto 1);
 
     inPos   <= MINUS_ONE when cmd.selPos = '0' else
                mid;
@@ -197,7 +194,7 @@ begin
 
     ADDER_1: entity work.Adder_nbits(structural_generic)
         generic map (
-            n           => WIDTH
+            n           => 8
         )
         port map (
             A           => adder1A,
@@ -225,7 +222,7 @@ begin
 
     ADDER_2: entity work.Adder_nbits(structural_generic)
         generic map (
-            n           => WIDTH
+            n           => 8
         )
         port map (
             A           => cmpX,
@@ -239,7 +236,7 @@ begin
     -- Status
 
     sts.EQ      <= '1' when UNSIGNED(adder2Out) = 0 else '0';
-    sts.GE      <= not adder2Out(WIDTH - 1);
+    sts.GE      <= not adder2Out(7);
     sts.lenZero <= '1' when UNSIGNED(len) = 0 else '0';
     sts.midZero <= '1' when UNSIGNED(mid) = 0 else '0';
 

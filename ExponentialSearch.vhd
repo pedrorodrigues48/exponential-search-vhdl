@@ -10,21 +10,18 @@ use IEEE.numeric_std.all;
 use work.ExponentialSearch_pkg.all;
 
 entity ExponentialSearch  is
-    generic(
-        WIDTH       : integer := 8
-    );
     port (
         clk         : in std_logic;
         rst         : in std_logic;
 
-        data        : in std_logic_vector (WIDTH - 1 downto 0);
+        data        : in std_logic_vector (7 downto 0);
         data_av     : in std_logic;
-        pos         : out std_logic_vector (WIDTH - 1 downto 0);
+        pos         : out std_logic_vector (7 downto 0);
         done        : out std_logic;
 
         -- Memoria
-        address     : out std_logic_vector (WIDTH - 1 downto 0);
-        data_in     : in std_logic_vector (WIDTH - 1 downto 0);
+        address     : out std_logic_vector (7 downto 0);
+        data_in     : in std_logic_vector (7 downto 0);
         ce          : out std_logic;
         wr          : out std_logic
     );
@@ -51,9 +48,6 @@ begin
         );
 
     DATA_PATH: entity work.DataPath
-        generic map (
-            WIDTH       => WIDTH
-        )
         port map (
             clk         => clk,
             rst         => rst,
@@ -73,9 +67,9 @@ architecture behavioral of ExponentialSearch is
     type State is (S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13);
     signal currentState: State;
 
-    signal base, len, i, left, right, mid, regPos : UNSIGNED(WIDTH - 1 downto 0);
-    signal key, memData : SIGNED(WIDTH - 1 downto 0);
-    signal sum : UNSIGNED(WIDTH - 1 downto 0);
+    signal base, len, i, left, right, mid, regPos : UNSIGNED(7 downto 0);
+    signal key, memData : SIGNED(7 downto 0);
+    signal sum : UNSIGNED(7 downto 0);
 
 begin
 
@@ -126,7 +120,7 @@ begin
                         regPos <= (others=>'1');    -- pos <= -1
                         currentState <= S13;
                     else
-                        i <= TO_UNSIGNED(1, WIDTH);
+                        i <= TO_UNSIGNED(1, 8);
                         currentState <= S4;
                     end if;
 
@@ -141,12 +135,12 @@ begin
                     if SIGNED(data_in) >= key then    -- mem[base + i] >= key
                         currentState <= S6;
                     else
-                        i <= i(WIDTH - 2 downto 0) & '0';   -- i * 2
+                        i <= i(6 downto 0) & '0';   -- i * 2
                         currentState <= S4;
                     end if;
 
                 when S6 =>
-                    left <= '0' & i(WIDTH - 1 downto 1);    -- i / 2
+                    left <= '0' & i(7 downto 1);    -- i / 2
 
                     if i >= len - 1 then
                         currentState <= S8;
@@ -171,7 +165,7 @@ begin
                     end if;
 
                 when S10 =>
-                    mid <= '0' & sum(WIDTH - 1 downto 1);    -- (left + right) / 2
+                    mid <= '0' & sum(7 downto 1);    -- (left + right) / 2
                     currentState <= S11;
 
                 when S11 =>
