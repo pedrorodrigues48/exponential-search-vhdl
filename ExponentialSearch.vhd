@@ -125,14 +125,14 @@ begin
                     end if;
 
                 when S4 =>
-                    if i >= len then
+                    if SIGNED(i - len) >= 0 then
                         currentState <= S6;
                     else
                         currentState <= S5;
                     end if;
 
                 when S5 =>
-                    if SIGNED(data_in) >= key then    -- mem[base + i] >= key
+                    if (SIGNED(data_in) - key) >= 0 then    -- mem[base + i] >= key
                         currentState <= S6;
                     else
                         i <= i(6 downto 0) & '0';   -- i * 2
@@ -142,7 +142,7 @@ begin
                 when S6 =>
                     left <= '0' & i(7 downto 1);    -- i / 2
 
-                    if i >= len - 1 then
+                    if SIGNED(i - (len - 1)) >= 0 then
                         currentState <= S8;
                     else
                         currentState <= S7;
@@ -157,7 +157,7 @@ begin
                     currentState <= S9;
 
                 when S9 =>
-                    if right >= left then
+                    if SIGNED(right - left) >= 0 then
                         currentState <= S10;
                     else
                         regPos <= (others=>'1');    -- pos <= -1
@@ -177,7 +177,7 @@ begin
                         regPos <= mid;
                         currentState <= S13;
 
-                    elsif memData < key then
+                    elsif (memData - key) < 0 then
                         left <= mid + 1;
                         currentState <= S9;
 
