@@ -94,7 +94,7 @@ cd caminho/para/esta/pasta
 do compile.tcl
 vsim work.ExponentialSearch_tb
 do wave.do
-run -all
+run 6 us
 ```
 
 > A ordem de compilação importa (de baixo para cima), por isso use sempre o `compile.tcl`.
