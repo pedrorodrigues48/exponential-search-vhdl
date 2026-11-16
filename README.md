@@ -76,7 +76,6 @@ As duas têm **o mesmo comportamento ciclo a ciclo**, e o test bench roda as dua
 | `ExponentialSearch_pkg.vhd` | Records `Command` e `Status` entre controle e dados |
 | `DataPath.vhd` | Bloco de dados |
 | `ControlPath.vhd` | Bloco de controle (FSM) |
-| `ControlPath_tb.vhd` | Test bench só do bloco de controle |
 | `ExponentialSearch.vhd` | Topo: arquiteturas `structural` e `behavioral` |
 | `ExponentialSearch_tb.vhd` | Test bench com as duas arquiteturas e duas memórias |
 | `image.txt` | Conteúdo da memória (um valor hexa por linha) |

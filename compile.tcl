@@ -31,7 +31,6 @@ set sourceFiles {
     ExponentialSearch_pkg.vhd
     DataPath.vhd
     ControlPath.vhd
-    ControlPath_tb.vhd
     ExponentialSearch.vhd
     ExponentialSearch_tb.vhd
 }
